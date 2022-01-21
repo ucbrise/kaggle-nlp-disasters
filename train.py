@@ -1,5 +1,6 @@
 #! ./.venv/bin/python
 import itertools
+import random
 
 import flor
 import numpy as np
@@ -22,11 +23,13 @@ def get_dna_kmers():
     step = 0
     vocab = ["A", "T", "C", "G"]
     packet = {"X": None, "__record__": []}
-    for kmer in np.random.permutation(vocab):
+    while step != len(vocab) ** 4:
+        kmer = [vocab[random.randint(0, len(vocab) - 1)] for _ in range(4)]
         packet["X"] = "".join(kmer)
-        packet["__record__"].append(packet["X"])
-        yield step, packet
-        step += 1
+        if packet["X"] not in packet["__record__"]:
+            packet["__record__"].append(packet["X"])
+            yield step, packet
+            step += 1
 
 
 training_data = get_dna_kmers()
