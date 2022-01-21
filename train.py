@@ -1,5 +1,4 @@
 #! ./.venv/bin/python
-
 import itertools
 
 import flor
@@ -23,7 +22,7 @@ def get_dna_kmers():
     step = 0
     vocab = ["A", "T", "C", "G"]
     packet = {"X": None, "__record__": []}
-    for kmer in itertools.permutations(vocab):
+    for kmer in np.random.permutation(vocab):
         packet["X"] = "".join(kmer)
         packet["__record__"].append(packet["X"])
         yield step, packet
