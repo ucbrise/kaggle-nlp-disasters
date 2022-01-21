@@ -1,4 +1,4 @@
-# source .venv/bin/activate
+#! ./.venv/bin/python
 import flor
 
 print("hello world!")
