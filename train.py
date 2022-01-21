@@ -56,4 +56,5 @@ for e in flor.it(range(100)):
                 print(s, batch["X"])
             history = batch["__record__"]
     flor.SkipBlock.end(history)
+    training_data = get_dna_kmers()
     print(f"EXITING: {e}")
