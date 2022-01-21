@@ -20,12 +20,14 @@ print("flor flags set")
 
 
 def get_dna_kmers():
+    step = 0
     vocab = ["A", "T", "C", "G"]
     packet = {"X": None, "__record__": []}
     for kmer in itertools.permutations(vocab):
         packet["X"] = "".join(kmer)
         packet["__record__"].append(packet["X"])
-        yield packet
+        yield step, packet
+        step += 1
 
 
 training_data = get_dna_kmers()
@@ -40,7 +42,7 @@ cycles over all of the data each epoch
 for e in flor.it(range(100)):
     print(f"ENTERING: {e}")
     if flor.SkipBlock.step_into("batchwise-loop"):
-        for s, batch in enumerate(training_data):
+        for s, batch in training_data:
             """
             inputs, labels = data
             optimizer.zero_grad()
