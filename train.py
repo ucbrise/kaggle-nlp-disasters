@@ -79,4 +79,4 @@ else:
         flor.SkipBlock.end(model)
         print(f"END OF EPOCH {e}")
 
-print("FINISHED")
+# print("FINISHED")
