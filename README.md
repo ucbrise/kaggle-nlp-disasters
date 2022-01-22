@@ -20,3 +20,7 @@ The Kaggle challenge is as follows:
 * `sample_submission.csv`: Used for formatting your output in a way that Kaggle can score you
 * `train.csv`: Data you will use for training and validation
 * `test.csv`: Hold-out set
+
+Here is an example of training data:
+
+![train dataframe image](doc/img/train_dataframe.png)
