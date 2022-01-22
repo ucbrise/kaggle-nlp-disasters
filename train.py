@@ -41,7 +41,7 @@ if not DEEP_LEARNING:
     X_train, X_val, y_train, y_val = train_test_split(
         integerMapped_keywords, data["target"]
     )
-    for _ in flor.it(range(1)):
+    for trial in flor.it(range(1)):
         # Naive first step: classify based on keyword
         clf = GradientBoostingClassifier(
             n_estimators=100,
@@ -62,7 +62,7 @@ if not DEEP_LEARNING:
         # print("Test score: ", tscore)
 
         preds_df = pd.DataFrame({"id": test_data["id"], "target": preds})
-        preds_df.to_csv("data/output.csv", index=False)
+        preds_df.to_csv(f"data/output_{trial}.csv", index=False)
 
 else:
     """
