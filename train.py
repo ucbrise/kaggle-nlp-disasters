@@ -34,10 +34,6 @@ if not DEEP_LEARNING:
         else:
             return _.index(s) + 1
 
-    def another_round(_=[True, False]):
-        return _.pop(0)
-
-
     integerMapped_keywords = (
         data["keyword"].apply(lambda k: key_mapper(k) if not k is np.NaN else 0)
     ).array.reshape(-1, 1)
@@ -45,7 +41,7 @@ if not DEEP_LEARNING:
     X_train, X_val, y_train, y_val = train_test_split(
         integerMapped_keywords, data["target"]
     )
-    while flor.it(another_round()):
+    for _ in flor.it(range(1)):
         # Naive first step: classify based on keyword
         clf = GradientBoostingClassifier(
             n_estimators=100,
