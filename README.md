@@ -24,3 +24,5 @@ The Kaggle challenge is as follows:
 Here is an example of training data:
 
 ![train dataframe image](doc/img/train_dataframe.png)
+
+![training data quality](doc/img/train_dataquality.png)
