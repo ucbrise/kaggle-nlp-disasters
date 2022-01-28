@@ -1,7 +1,5 @@
 {
-    "NAME": "kaggle-nlp-disasters",
-    "MEMO": "/home/codespace/.flor/kaggle-nlp-disasters/2022-01-28T00:33:05.json",
-    "KVS": {
-        "clf_seed": 3888
-    }
+    "NAME": "kaggle-nlp-disasters-rnn",
+    "MEMO": "/home/codespace/.flor/kaggle-nlp-disasters-rnn/2022-01-28T06:33:42.json",
+    "KVS": {}
 }

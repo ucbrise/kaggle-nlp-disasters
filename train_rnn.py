@@ -9,6 +9,10 @@ from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import torch.optim as optim
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import seaborn as sns
+import flor
+
+flor.flags.NAME = "kaggle-nlp-disasters-rnn"
+flor.flags.REPLAY = False
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 device
@@ -120,53 +124,54 @@ def train(model, optimizer, criterion = nn.BCELoss(), train_loader = train_iter,
 
     # training loop
     model.train()
-    for epoch in range(num_epochs):
-        for ((words, words_len), labels), _ in train_loader:           
-            labels = labels.to(device)
-            words = words.to(device)
-            words_len = words_len.to(device)
-            output = model(words, words_len)
+    for epoch in flor.it(range(num_epochs)): 
+        if flor.SkipBlock.step_into("batchwise-loop"):
+            for ((words, words_len), labels), _ in train_loader:           
+                labels = labels.to(device)
+                words = words.to(device)
+                words_len = words_len.to(device)
+                output = model(words, words_len)
 
-            loss = criterion(output, labels)
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
+                loss = criterion(output, labels)
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
 
-            # update running values
-            running_loss += loss.item()
-            global_step += 1
+                # update running values
+                running_loss += loss.item()
+                global_step += 1
 
-            # evaluation step
-            if global_step % eval_every == 0:
-                model.eval()
-                with torch.no_grad():                    
-                  # validation loop
-                  for ((words, words_len), labels), _ in valid_loader:
-                      labels = labels.to(device)
-                      words = words.to(device)
-                      words_len = words_len.to(device)
-                      output = model(words, words_len)
+                # evaluation step
+                if global_step % eval_every == 0:
+                    model.eval()
+                    with torch.no_grad():                    
+                    # validation loop
+                        for ((words, words_len), labels), _ in valid_loader:
+                            labels = labels.to(device)
+                            words = words.to(device)
+                            words_len = words_len.to(device)
+                            output = model(words, words_len)
 
-                      loss = criterion(output, labels)
-                      valid_running_loss += loss.item()
+                            loss = criterion(output, labels)
+                            valid_running_loss += loss.item()
 
-                # evaluation
-                average_train_loss = running_loss / eval_every
-                average_valid_loss = valid_running_loss / len(valid_loader)
-                train_loss_list.append(average_train_loss)
-                valid_loss_list.append(average_valid_loss)
-                global_steps_list.append(global_step)
+                    # evaluation
+                    average_train_loss = running_loss / eval_every
+                    average_valid_loss = valid_running_loss / len(valid_loader)
+                    train_loss_list.append(average_train_loss)
+                    valid_loss_list.append(average_valid_loss)
+                    global_steps_list.append(global_step)
 
-                # resetting running values
-                running_loss = 0.0                
-                valid_running_loss = 0.0
-                model.train()
+                    # resetting running values
+                    running_loss = 0.0                
+                    valid_running_loss = 0.0
+                    model.train()
 
-                # print progress
-                print('Epoch [{}/{}], Step [{}/{}], Train Loss: {:.4f}, Valid Loss: {:.4f}'
-                      .format(epoch+1, num_epochs, global_step, num_epochs*len(train_loader),
-                              average_train_loss, average_valid_loss))
-                
+                    # print progress
+                    print('Epoch [{}/{}], Step [{}/{}], Train Loss: {:.4f}, Valid Loss: {:.4f}'
+                        .format(epoch+1, num_epochs, global_step, num_epochs*len(train_loader),
+                                average_train_loss, average_valid_loss))
+        flor.SkipBlock.end(model)
                 # checkpoint
                 #if best_valid_loss > average_valid_loss:
                     #best_valid_loss = average_valid_loss
@@ -178,5 +183,5 @@ def train(model, optimizer, criterion = nn.BCELoss(), train_loader = train_iter,
 
 
 model = LSTM().to(device)
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+optimizer = optim.Adam(model.parameters(), lr=0.01)
 train(model=model, optimizer=optimizer, num_epochs=10)
