@@ -67,7 +67,7 @@ class LSTM(nn.Module):
 
 
 # training 
-def train(model, optimizer, criterion = nn.BCELoss(), train_loader = train_iter, valid_loader = valid_iter, num_epochs = 5, eval_every = len(train_iter) // 2, file_path = 'training_process', best_valid_loss = float("Inf")):  
+def train(model, optimizer, criterion = nn.BCELoss(), train_loader = train_iter, valid_loader = valid_iter, test_loader = test_iter, num_epochs = 5, eval_every = len(train_iter) // 2, file_path = 'training_process', best_valid_loss = float("Inf")):  
     running_loss = 0.0
     valid_running_loss = 0.0
     global_step = 0
@@ -125,9 +125,24 @@ def train(model, optimizer, criterion = nn.BCELoss(), train_loader = train_iter,
                         .format(epoch+1, num_epochs, global_step, num_epochs*len(train_loader),
                                 average_train_loss, average_valid_loss))
         flor.SkipBlock.end(model)
+    # predict test 
+    y_pred = []
+    model.eval()
+    with torch.no_grad():
+        for ((words, words_len), labels), _ in test_loader:           
+            labels = labels.to(device)
+            words = words.to(device)
+            words_len = words_len.to(device)
+            output = model(words, words_len)
+
+            output = (output > threshold).int()
+            y_pred.extend(output.tolist())
     print('Finished Training!')
+    return y_pred
 
 
 model = LSTM().to(device)
 optimizer = optim.Adam(model.parameters(), lr=0.001)
-train(model=model, optimizer=optimizer, num_epochs=10)
+pred = train(model=model, optimizer=optimizer, num_epochs=10)
+print(pred)
+print(len(pred))
