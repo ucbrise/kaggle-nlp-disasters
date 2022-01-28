@@ -176,5 +176,5 @@ def train(model, optimizer, criterion = nn.BCELoss(), train_loader = train_iter,
 
 
 model = LSTM().to(device)
-optimizer = optim.Adam(model.parameters(), lr=0.005)
+optimizer = optim.Adam(model.parameters(), lr=0.001)
 train(model=model, optimizer=optimizer, num_epochs=10)
