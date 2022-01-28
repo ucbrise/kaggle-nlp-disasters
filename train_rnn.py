@@ -20,8 +20,10 @@ device
 label_field = Field(sequential=False, use_vocab=False, batch_first=True, dtype=torch.float)
 text_field = Field(tokenize='spacy', lower=True, include_lengths=True, batch_first=True)
 fields = [('words', text_field), ('target', label_field)]
+fields_test = [('words', text_field)]
 
-train, valid, test = TabularDataset.splits(path = 'data', train='train_rnn.csv', validation='valid_rnn.csv', test = 'test_rnn.csv', format='CSV', fields=fields, skip_header=True)
+train, valid = TabularDataset.splits(path = 'data', train='train_rnn.csv', validation='valid_rnn.csv', format='CSV', fields=fields, skip_header=True)
+test = TabularDataset.splits(path = 'data', test = 'test_rnn.csv', format='CSV', fields=fields_test, skip_header=True)
 
 train_iter = BucketIterator(train, batch_size=200, sort_key=lambda x: len(x.words), device = device, sort=True, sort_within_batch=True)
 valid_iter = BucketIterator(valid, batch_size=200, sort_key=lambda x: len(x.words), device = device, sort=True, sort_within_batch=True)
