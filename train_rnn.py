@@ -172,16 +172,9 @@ def train(model, optimizer, criterion = nn.BCELoss(), train_loader = train_iter,
                         .format(epoch+1, num_epochs, global_step, num_epochs*len(train_loader),
                                 average_train_loss, average_valid_loss))
         flor.SkipBlock.end(model)
-                # checkpoint
-                #if best_valid_loss > average_valid_loss:
-                    #best_valid_loss = average_valid_loss
-                    #save_checkpoint(file_path + '/model.pt', model, optimizer, best_valid_loss)
-                    #save_metrics(file_path + '/metrics.pt', train_loss_list, valid_loss_list, global_steps_list)
-    
-    #save_metrics(file_path + '/metrics.pt', train_loss_list, valid_loss_list, global_steps_list)
     print('Finished Training!')
 
 
 model = LSTM().to(device)
-optimizer = optim.Adam(model.parameters(), lr=0.01)
+optimizer = optim.Adam(model.parameters(), lr=0.005)
 train(model=model, optimizer=optimizer, num_epochs=10)
