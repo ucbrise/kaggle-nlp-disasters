@@ -144,8 +144,8 @@ def train(model, optimizer, criterion = nn.BCELoss(), train_loader = train_iter,
 
 
 model = LSTM().to(device)
-optimizer = optim.Adam(model.parameters(), lr=0.0005)
-pred = train(model=model, optimizer=optimizer, num_epochs=7)
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+pred = train(model=model, optimizer=optimizer, num_epochs=20)
 print(pred)
 print(len(pred))
 
