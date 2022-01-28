@@ -148,3 +148,8 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 pred = train(model=model, optimizer=optimizer, num_epochs=10)
 print(pred)
 print(len(pred))
+
+# save result as .csv file 
+test_data = pd.read_csv("data/test.csv")
+preds_df = pd.DataFrame({"id": test_data["id"], "target": pred})
+preds_df.to_csv(f"data/output_rnn_1.csv", index=False)
