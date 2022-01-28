@@ -23,9 +23,9 @@ fields = [('words', text_field), ('target', label_field)]
 
 train, valid, test = TabularDataset.splits(path = 'data', train='train_rnn.csv', validation='valid_rnn.csv', test = 'test_rnn.csv', format='CSV', fields=fields, skip_header=True)
 
-train_iter = BucketIterator(train, batch_size=32, sort_key=lambda x: len(x.words), device = device, sort=True, sort_within_batch=True)
-valid_iter = BucketIterator(valid, batch_size=32, sort_key=lambda x: len(x.words), device = device, sort=True, sort_within_batch=True)
-test_iter = BucketIterator(test, batch_size=32, sort_key=lambda x: len(x.words), device = device, sort=True, sort_within_batch=True)
+train_iter = BucketIterator(train, batch_size=100, sort_key=lambda x: len(x.words), device = device, sort=True, sort_within_batch=True)
+valid_iter = BucketIterator(valid, batch_size=100, sort_key=lambda x: len(x.words), device = device, sort=True, sort_within_batch=True)
+test_iter = BucketIterator(test, batch_size=100, sort_key=lambda x: len(x.words), device = device, sort=True, sort_within_batch=True)
 
 text_field.build_vocab(train, min_freq=5)
 
