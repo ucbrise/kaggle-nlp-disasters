@@ -129,13 +129,13 @@ def train(model, optimizer, criterion = nn.BCELoss(), train_loader = train_iter,
     y_pred = []
     model.eval()
     with torch.no_grad():
-        for ((words, words_len), labels), _ in test_loader:           
-            labels = labels.to(device)
+        for ((words, words_len)), _ in test_loader:           
+            #labels = labels.to(device)
             words = words.to(device)
             words_len = words_len.to(device)
             output = model(words, words_len)
 
-            output = (output > threshold).int()
+            output = (output > 0.5).int()
             y_pred.extend(output.tolist())
     print('Finished Training!')
     return y_pred
