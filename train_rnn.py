@@ -68,15 +68,12 @@ class LSTM(nn.Module):
     def __init__(self, dimension=128):
         super(LSTM, self).__init__()
 
-        self.embedding_target_size = 128
-        self.num_layers = 1
-
-        self.embedding = nn.Embedding(len(text_field.vocab), self.embedding_target_size)
+        self.embedding = nn.Embedding(len(text_field.vocab), dimension)
         self.dimension = dimension
         self.lstm = nn.LSTM(
-            input_size=self.embedding_target_size,
+            input_size=dimension,
             hidden_size=dimension,
-            num_layers=self.num_layers,
+            num_layers=1,
             batch_first=True,
             bidirectional=True,
         )
@@ -178,8 +175,8 @@ def train(
                             num_epochs,
                             global_step,
                             num_epochs * len(train_loader),
-                            average_train_loss,
-                            average_valid_loss,
+                            flor.log("avg_train_loss", average_train_loss),
+                            flor.log("average_valid_loss", average_valid_loss),
                         )
                     )
         flor.SkipBlock.end(model)
