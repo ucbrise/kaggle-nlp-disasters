@@ -1,5 +1,5 @@
-import pandas as pd 
-import numpy as np 
+import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import torch
@@ -17,47 +17,85 @@ flor.flags.REPLAY = False
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 device
 
-label_field = Field(sequential=False, use_vocab=False, batch_first=True, dtype=torch.float)
-text_field = Field(tokenize='spacy', lower=True, include_lengths=True, batch_first=True)
-fields = [('words', text_field), ('target', label_field)]
-fields_test = [('words', text_field)]
+label_field = Field(
+    sequential=False, use_vocab=False, batch_first=True, dtype=torch.float
+)
+text_field = Field(tokenize="spacy", lower=True, include_lengths=True, batch_first=True)
+fields = [("words", text_field), ("target", label_field)]
+fields_test = [("words", text_field)]
 
-train, valid = TabularDataset.splits(path = 'data', train='train_rnn.csv', validation='valid_rnn.csv', format='CSV', fields=fields, skip_header=True)
-test = TabularDataset(path = 'data/test_rnn.csv', format='CSV', fields=fields_test, skip_header=True)
+train, valid = TabularDataset.splits(
+    path="data",
+    train="train_rnn.csv",
+    validation="valid_rnn.csv",
+    format="CSV",
+    fields=fields,
+    skip_header=True,
+)
+test = TabularDataset(
+    path="data/test_rnn.csv", format="CSV", fields=fields_test, skip_header=True
+)
 
-train_iter = BucketIterator(train, batch_size=200, sort_key=lambda x: len(x.words), device = device, sort=True, sort_within_batch=True)
-valid_iter = BucketIterator(valid, batch_size=200, sort_key=lambda x: len(x.words), device = device, sort=True, sort_within_batch=True)
-test_iter = BucketIterator(test, batch_size=200, sort_key=lambda x: len(x.words), device = device, sort=True, sort_within_batch=True)
+train_iter = BucketIterator(
+    train,
+    batch_size=200,
+    sort_key=lambda x: len(x.words),
+    device=device,
+    sort=True,
+    sort_within_batch=True,
+)
+valid_iter = BucketIterator(
+    valid,
+    batch_size=200,
+    sort_key=lambda x: len(x.words),
+    device=device,
+    sort=True,
+    sort_within_batch=True,
+)
+test_iter = BucketIterator(
+    test,
+    batch_size=200,
+    sort_key=lambda x: len(x.words),
+    device=device,
+    sort=True,
+    sort_within_batch=True,
+)
 
 text_field.build_vocab(train, min_freq=5)
 
-# LSTM model 
+# LSTM model
 class LSTM(nn.Module):
-
     def __init__(self, dimension=128):
         super(LSTM, self).__init__()
 
-        self.embedding = nn.Embedding(len(text_field.vocab), 300)
+        self.embedding_target_size = 128
+        self.num_layers = 1
+
+        self.embedding = nn.Embedding(len(text_field.vocab), self.embedding_target_size)
         self.dimension = dimension
-        self.lstm = nn.LSTM(input_size=300,
-                            hidden_size=dimension,
-                            num_layers=1,
-                            batch_first=True,
-                            bidirectional=True)
+        self.lstm = nn.LSTM(
+            input_size=self.embedding_target_size,
+            hidden_size=dimension,
+            num_layers=self.num_layers,
+            batch_first=True,
+            bidirectional=True,
+        )
         self.drop = nn.Dropout(p=0.5)
 
-        self.fc = nn.Linear(2*dimension, 1)
+        self.fc = nn.Linear(2 * dimension, 1)
 
     def forward(self, text, text_len):
 
         text_emb = self.embedding(text)
 
-        packed_input = pack_padded_sequence(text_emb, text_len, batch_first=True, enforce_sorted=False)
+        packed_input = pack_padded_sequence(
+            text_emb, text_len, batch_first=True, enforce_sorted=False
+        )
         packed_output, _ = self.lstm(packed_input)
         output, _ = pad_packed_sequence(packed_output, batch_first=True)
 
-        out_forward = output[range(len(output)), text_len - 1, :self.dimension]
-        out_reverse = output[:, 0, self.dimension:]
+        out_forward = output[range(len(output)), text_len - 1, : self.dimension]
+        out_reverse = output[:, 0, self.dimension :]
         out_reduced = torch.cat((out_forward, out_reverse), 1)
         text_fea = self.drop(out_reduced)
 
@@ -68,8 +106,19 @@ class LSTM(nn.Module):
         return text_out
 
 
-# training 
-def train(model, optimizer, criterion = nn.BCELoss(), train_loader = train_iter, valid_loader = valid_iter, test_loader = test_iter, num_epochs = 5, eval_every = len(train_iter) // 2, file_path = 'training_process', best_valid_loss = float("Inf")):  
+# training
+def train(
+    model,
+    optimizer,
+    criterion=nn.BCELoss(),
+    train_loader=train_iter,
+    valid_loader=valid_iter,
+    test_loader=test_iter,
+    num_epochs=5,
+    eval_every=len(train_iter) // 2,
+    file_path="training_process",
+    best_valid_loss=float("Inf"),
+):
     running_loss = 0.0
     valid_running_loss = 0.0
     global_step = 0
@@ -79,9 +128,9 @@ def train(model, optimizer, criterion = nn.BCELoss(), train_loader = train_iter,
 
     # training loop
     model.train()
-    for epoch in flor.it(range(num_epochs)): 
+    for epoch in flor.it(range(num_epochs)):
         if flor.SkipBlock.step_into("batchwise-loop"):
-            for ((words, words_len), labels), _ in train_loader:           
+            for ((words, words_len), labels), _ in train_loader:
                 labels = labels.to(device)
                 words = words.to(device)
                 words_len = words_len.to(device)
@@ -99,8 +148,8 @@ def train(model, optimizer, criterion = nn.BCELoss(), train_loader = train_iter,
                 # evaluation step
                 if global_step % eval_every == 0:
                     model.eval()
-                    with torch.no_grad():                    
-                    # validation loop
+                    with torch.no_grad():
+                        # validation loop
                         for ((words, words_len), labels), _ in valid_loader:
                             labels = labels.to(device)
                             words = words.to(device)
@@ -118,28 +167,35 @@ def train(model, optimizer, criterion = nn.BCELoss(), train_loader = train_iter,
                     global_steps_list.append(global_step)
 
                     # resetting running values
-                    running_loss = 0.0                
+                    running_loss = 0.0
                     valid_running_loss = 0.0
                     model.train()
 
                     # print progress
-                    print('Epoch [{}/{}], Step [{}/{}], Train Loss: {:.4f}, Valid Loss: {:.4f}'
-                        .format(epoch+1, num_epochs, global_step, num_epochs*len(train_loader),
-                                average_train_loss, average_valid_loss))
+                    print(
+                        "Epoch [{}/{}], Step [{}/{}], Train Loss: {:.4f}, Valid Loss: {:.4f}".format(
+                            epoch + 1,
+                            num_epochs,
+                            global_step,
+                            num_epochs * len(train_loader),
+                            average_train_loss,
+                            average_valid_loss,
+                        )
+                    )
         flor.SkipBlock.end(model)
-    # predict test 
+    # predict test
     y_pred = []
     model.eval()
     with torch.no_grad():
-        for ((words, words_len)), _ in test_loader:           
-            #labels = labels.to(device)
+        for ((words, words_len)), _ in test_loader:
+            # labels = labels.to(device)
             words = words.to(device)
             words_len = words_len.to(device)
             output = model(words, words_len)
 
             output = (output > 0.5).int()
             y_pred.extend(output.tolist())
-    print('Finished Training!')
+    print("Finished Training!")
     return y_pred
 
 
@@ -149,7 +205,7 @@ pred = train(model=model, optimizer=optimizer, num_epochs=20)
 print(pred)
 print(len(pred))
 
-# save result as .csv file 
+# save result as .csv file
 test_data = pd.read_csv("data/test.csv")
 preds_df = pd.DataFrame({"id": test_data["id"], "target": pred})
 preds_df.to_csv(f"data/output_lstm_3.csv", index=False)
