@@ -11,8 +11,9 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 import seaborn as sns
 import flor
 from multiprocessing import set_start_method
+
 try:
-    set_start_method('spawn')
+    set_start_method("spawn")
 except RuntimeError:
     pass
 
@@ -212,7 +213,7 @@ def train(
 
 model = LSTM(96).to(device)
 optimizer = optim.Adam(model.parameters(), lr=0.001)
-pred = train(model=model, optimizer=optimizer, num_epochs=40)
+pred = train(model=model, optimizer=optimizer, num_epochs=80)
 # print(pred)
 # print(len(pred))
 
