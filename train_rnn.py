@@ -77,7 +77,7 @@ class LSTM(nn.Module):
             batch_first=True,
             bidirectional=True,
         )
-        self.drop = nn.Dropout(p=0.5)
+        self.drop = nn.Dropout(p=0.75)
 
         self.fc = nn.Linear(2 * dimension, 1)
 
@@ -207,7 +207,7 @@ def train(
 
 model = LSTM(16).to(device)
 optimizer = optim.Adam(model.parameters(), lr=0.001)
-pred = train(model=model, optimizer=optimizer, num_epochs=40)
+pred = train(model=model, optimizer=optimizer, num_epochs=80)
 print(pred)
 print(len(pred))
 
