@@ -211,7 +211,7 @@ def train(
     return y_pred
 
 
-model = LSTM(12).to(device)
+model = LSTM(11).to(device)
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 pred = train(model=model, optimizer=optimizer, num_epochs=160)
 # print(pred)
