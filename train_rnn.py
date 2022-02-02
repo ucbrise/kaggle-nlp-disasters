@@ -205,11 +205,11 @@ def train(
     return y_pred
 
 
-model = LSTM(13).to(device)
+model = LSTM(8).to(device)
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 pred = train(model=model, optimizer=optimizer, num_epochs=160)
-print(pred)
-print(len(pred))
+# print(pred)
+# print(len(pred))
 
 # save result as .csv file
 test_data = pd.read_csv("data/test.csv")
