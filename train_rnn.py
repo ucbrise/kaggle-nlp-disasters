@@ -74,9 +74,9 @@ class LSTM(nn.Module):
     def __init__(self, dimension=128):
         super(LSTM, self).__init__()
 
-        self.embedding = nn.Embedding(len(text_field.vocab), 8)
+        self.embedding = nn.Embedding(len(text_field.vocab), 14)
         self.lstm = nn.LSTM(
-            input_size=8,
+            input_size=14,
             hidden_size=dimension,
             num_layers=1,
             batch_first=True,
