@@ -74,9 +74,9 @@ class LSTM(nn.Module):
     def __init__(self, dimension=128):
         super(LSTM, self).__init__()
 
-        self.embedding = nn.Embedding(len(text_field.vocab), 14)
+        self.embedding = nn.Embedding(len(text_field.vocab), dimension)
         self.lstm = nn.LSTM(
-            input_size=14,
+            input_size=dimension,
             hidden_size=dimension,
             num_layers=1,
             batch_first=True,
@@ -211,7 +211,7 @@ def train(
     return y_pred
 
 
-model = LSTM(14).to(device)
+model = LSTM(20).to(device)
 optimizer = optim.Adam(model.parameters(), lr=0.05)
 pred = train(model=model, optimizer=optimizer, num_epochs=160)
 # print(pred)
