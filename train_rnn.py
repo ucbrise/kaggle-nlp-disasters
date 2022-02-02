@@ -82,7 +82,7 @@ class LSTM(nn.Module):
             batch_first=True,
             bidirectional=True,
         )
-        self.drop = nn.Dropout(p=0.75)
+        self.drop = nn.Dropout(p=0.9)
         self.dimension = dimension
         self.fc = nn.Linear(2 * dimension, 1)
         self.relu = nn.ReLU()
