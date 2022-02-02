@@ -205,7 +205,7 @@ def train(
     return y_pred
 
 
-model = LSTM(64).to(device)
+model = LSTM(32).to(device)
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 pred = train(model=model, optimizer=optimizer, num_epochs=20)
 print(pred)
