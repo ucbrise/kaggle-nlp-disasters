@@ -163,7 +163,7 @@ def train(
 
                     if average_valid_loss < best_accuracy:
                         best_accuracy = average_valid_loss
-                        torch.save(model, "best-model.pt")
+                        torch.save(model.state_dict(), "best-model.pt")
 
                     train_loss_list.append(average_train_loss)
                     valid_loss_list.append(average_valid_loss)
@@ -188,7 +188,7 @@ def train(
 
             flor.SkipBlock.end(model, optimizer)
 
-    model = torch.load("best-model.pt")
+    model.load_state_dict(torch.load("best-model.pt"))
     # predict test
     y_pred = []
     model.eval()
