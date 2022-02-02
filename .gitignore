@@ -542,3 +542,5 @@ dmypy.json
 .venv/lib/python3.8/site-packages/smmap/__pycache__/mman.cpython-38.pyc
 .venv/lib/python3.8/site-packages/smmap/__pycache__/util.cpython-38.pyc
 **.pyc
+train_rnn.py
+best-model.pt

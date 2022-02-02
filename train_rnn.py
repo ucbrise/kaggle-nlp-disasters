@@ -124,6 +124,7 @@ def train(
     global_steps_list = []
 
     # training loop
+    best_accuracy = float("inf")
     model.train()
     for epoch in flor.it(range(num_epochs)):
         if flor.SkipBlock.step_into("batchwise-loop"):
@@ -159,6 +160,11 @@ def train(
                     # evaluation
                     average_train_loss = running_loss / eval_every
                     average_valid_loss = valid_running_loss / len(valid_loader)
+
+                    if average_valid_loss < best_accuracy:
+                        best_accuracy = average_valid_loss
+                        torch.save(model, "best-model.pt")
+
                     train_loss_list.append(average_train_loss)
                     valid_loss_list.append(average_valid_loss)
                     global_steps_list.append(global_step)
@@ -179,7 +185,10 @@ def train(
                             flor.log("average_valid_loss", average_valid_loss),
                         )
                     )
-        flor.SkipBlock.end(model)
+
+            flor.SkipBlock.end(model, optimizer)
+
+    model = torch.load("best-model.pt")
     # predict test
     y_pred = []
     model.eval()
