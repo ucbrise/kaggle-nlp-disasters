@@ -188,7 +188,7 @@ def train(
 
             flor.SkipBlock.end(model, optimizer)
 
-    model.load_state_dict(torch.load("best-model.pt"))
+    # model.load_state_dict(torch.load("best-model.pt"))
     # predict test
     y_pred = []
     model.eval()
