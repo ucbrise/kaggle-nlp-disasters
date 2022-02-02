@@ -155,7 +155,7 @@ def train(
                             output = model(words, words_len)
 
                             loss = criterion(output, labels)
-                            valid_running_loss += loss.item()
+                            valid_running_loss += float(loss.item())
 
                     # evaluation
                     average_train_loss = running_loss / eval_every
