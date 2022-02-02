@@ -10,6 +10,11 @@ import torch.optim as optim
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import seaborn as sns
 import flor
+from multiprocessing import set_start_method
+try:
+    set_start_method('spawn')
+except RuntimeError:
+    pass
 
 flor.flags.NAME = "kaggle-nlp-disasters-rnn"
 flor.flags.REPLAY = False
