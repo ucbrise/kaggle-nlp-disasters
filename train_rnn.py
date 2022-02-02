@@ -83,7 +83,7 @@ class LSTM(nn.Module):
 
     def forward(self, text, text_len):
 
-        text_emb = self.embedding(text)
+        text_emb = self.drop(self.embedding(text))
 
         packed_input = pack_padded_sequence(
             text_emb, text_len, batch_first=True, enforce_sorted=False
@@ -94,7 +94,7 @@ class LSTM(nn.Module):
         out_forward = output[range(len(output)), text_len - 1, : self.dimension]
         out_reverse = output[:, 0, self.dimension :]
         out_reduced = torch.cat((out_forward, out_reverse), 1)
-        text_fea = self.drop(out_reduced)
+        text_fea = out_reduced
 
         text_fea = self.fc(text_fea)
         text_fea = torch.squeeze(text_fea, 1)
@@ -205,9 +205,9 @@ def train(
     return y_pred
 
 
-model = LSTM(8).to(device)
+model = LSTM(128).to(device)
 optimizer = optim.Adam(model.parameters(), lr=0.001)
-pred = train(model=model, optimizer=optimizer, num_epochs=160)
+pred = train(model=model, optimizer=optimizer, num_epochs=20)
 # print(pred)
 # print(len(pred))
 
