@@ -75,7 +75,6 @@ class LSTM(nn.Module):
         super(LSTM, self).__init__()
 
         self.embedding = nn.Embedding(len(text_field.vocab), 8)
-        self.dimension = dimension
         self.lstm = nn.LSTM(
             input_size=8,
             hidden_size=dimension,
@@ -84,7 +83,7 @@ class LSTM(nn.Module):
             bidirectional=True,
         )
         self.drop = nn.Dropout(p=0.5)
-
+        self.dimension = dimension
         self.fc = nn.Linear(2 * dimension, 1)
         self.relu = nn.ReLU()
 
@@ -103,7 +102,7 @@ class LSTM(nn.Module):
         out_reduced = torch.cat((out_forward, out_reverse), 1)
         text_fea = out_reduced
 
-        text_fea = self.drop(self.fc(text_fea))
+        text_fea = self.fc(self.drop(text_fea))
         text_fea = torch.squeeze(text_fea, 1)
         text_out = torch.sigmoid(text_fea)
 
@@ -214,7 +213,7 @@ def train(
 
 model = LSTM(92).to(device)
 optimizer = optim.Adam(model.parameters(), lr=0.001)
-pred = train(model=model, optimizer=optimizer, num_epochs=160)
+pred = train(model=model, optimizer=optimizer, num_epochs=20)
 # print(pred)
 # print(len(pred))
 
