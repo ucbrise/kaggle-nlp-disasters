@@ -131,7 +131,7 @@ def train(
             for ((words, words_len), labels), _ in train_loader:
                 labels = labels.to(device)
                 words = words.to(device)
-                words_len = words_len.cpu()
+                words_len = words_len.detach().cpu()
                 output = model(words, words_len)
 
                 loss = criterion(output, labels)
@@ -151,7 +151,7 @@ def train(
                         for ((words, words_len), labels), _ in valid_loader:
                             labels = labels.to(device)
                             words = words.to(device)
-                            words_len = words_len.cpu()
+                            words_len = words_len.detach().cpu()
                             output = model(words, words_len)
 
                             loss = criterion(output, labels)
@@ -196,7 +196,7 @@ def train(
         for ((words, words_len)), _ in test_loader:
             # labels = labels.to(device)
             words = words.to(device)
-            words_len = words_len.cpu()
+            words_len = words_len.detach().cpu()
             output = model(words, words_len)
 
             output = (output > 0.5).int()
