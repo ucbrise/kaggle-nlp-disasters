@@ -89,7 +89,7 @@ class LSTM(nn.Module):
 
     def forward(self, text, text_len):
 
-        text_emb = self.embedding(text)
+        text_emb = self.relu(self.embedding(text))
 
         packed_input = pack_padded_sequence(
             text_emb, text_len, batch_first=True, enforce_sorted=False
