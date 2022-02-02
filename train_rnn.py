@@ -74,22 +74,23 @@ class LSTM(nn.Module):
     def __init__(self, dimension=128):
         super(LSTM, self).__init__()
 
-        self.embedding = nn.Embedding(len(text_field.vocab), dimension)
+        self.embedding = nn.Embedding(len(text_field.vocab), 8)
         self.dimension = dimension
         self.lstm = nn.LSTM(
-            input_size=dimension,
+            input_size=8,
             hidden_size=dimension,
             num_layers=1,
             batch_first=True,
             bidirectional=True,
         )
-        self.drop = nn.Dropout(p=0.95)
+        self.drop = nn.Dropout(p=0.5)
 
         self.fc = nn.Linear(2 * dimension, 1)
+        self.relu = nn.ReLU()
 
     def forward(self, text, text_len):
 
-        text_emb = self.drop(self.embedding(text))
+        text_emb = self.embedding(text)
 
         packed_input = pack_padded_sequence(
             text_emb, text_len, batch_first=True, enforce_sorted=False
@@ -102,7 +103,7 @@ class LSTM(nn.Module):
         out_reduced = torch.cat((out_forward, out_reverse), 1)
         text_fea = out_reduced
 
-        text_fea = self.fc(text_fea)
+        text_fea = self.drop(self.fc(text_fea))
         text_fea = torch.squeeze(text_fea, 1)
         text_out = torch.sigmoid(text_fea)
 
