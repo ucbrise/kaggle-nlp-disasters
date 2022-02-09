@@ -133,7 +133,7 @@ def train(
     best_accuracy = float("inf")
     model.train()
     for epoch in flor.it(range(num_epochs)):
-        if flor.SkipBlock.step_into("batchwise-loop"):
+        if flor.SkipBlock.step_into("batchwise-loop", probed=False):
             for ((words, words_len), labels), _ in train_loader:
                 labels = labels.to(device)
                 words = words.to(device)
