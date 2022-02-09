@@ -17,9 +17,6 @@ try:
 except RuntimeError:
     pass
 
-flor.flags.NAME = "kaggle-nlp-disasters-rnn"
-flor.flags.REPLAY = False
-
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 device
 
@@ -130,7 +127,7 @@ def train(
     global_steps_list = []
 
     # training loop
-    best_accuracy = float("inf")
+    best_loss = float("inf")
     model.train()
     for epoch in flor.it(range(num_epochs)):
         if flor.SkipBlock.step_into("batchwise-loop", probed=False):
@@ -167,8 +164,8 @@ def train(
                     average_train_loss = running_loss / eval_every
                     average_valid_loss = valid_running_loss / len(valid_loader)
 
-                    if average_valid_loss < best_accuracy:
-                        best_accuracy = average_valid_loss
+                    if average_valid_loss < best_loss:
+                        best_loss = average_valid_loss
                         torch.save(model.state_dict(), "best-model.pt")
 
                     train_loss_list.append(average_train_loss)
@@ -193,7 +190,7 @@ def train(
                     )
 
         flor.SkipBlock.end(model, optimizer)
-        print("BEST ACC SO FAR :", flor.log("best_acc", best_accuracy))
+        print("BEST ACC SO FAR :", flor.log("best_loss", best_loss))
 
     # model.load_state_dict(torch.load("best-model.pt"))
     # predict test
