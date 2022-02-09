@@ -192,7 +192,8 @@ def train(
                         )
                     )
 
-            flor.SkipBlock.end(model, optimizer)
+        flor.SkipBlock.end(model, optimizer)
+        print("BEST ACC SO FAR :", flor.log("best_acc", best_accuracy))
 
     # model.load_state_dict(torch.load("best-model.pt"))
     # predict test
