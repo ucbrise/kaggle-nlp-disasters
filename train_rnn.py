@@ -130,7 +130,7 @@ def train(
     best_loss = float("inf")
     model.train()
     for epoch in flor.it(range(num_epochs)):
-        if flor.SkipBlock.step_into("batchwise-loop", probed=False):
+        if flor.SkipBlock.step_into("batchwise-loop"):
             for ((words, words_len), labels), _ in train_loader:
                 labels = labels.to(device)
                 words = words.to(device)
@@ -190,7 +190,6 @@ def train(
                     )
 
         flor.SkipBlock.end(model, optimizer)
-        print("BEST ACC SO FAR :", flor.log("best_loss", best_loss))
 
     # model.load_state_dict(torch.load("best-model.pt"))
     # predict test
@@ -219,3 +218,17 @@ pred = train(model=model, optimizer=optimizer, num_epochs=80)
 test_data = pd.read_csv("data/test.csv")
 preds_df = pd.DataFrame({"id": test_data["id"], "target": pred})
 preds_df.to_csv(f"data/output_lstm_3.csv", index=False)
+
+
+def log_helper(valid_loader):
+    model.eval()
+    with torch.no_grad():
+        # validation loop
+        for ((words, words_len), labels), _ in valid_loader:
+            labels = labels.to(device)
+            words = words.to(device)
+            words_len = words_len.detach().cpu()
+            output = model(words, words_len)
+
+            loss = criterion(output, labels)
+            valid_running_loss += float(loss.item())
