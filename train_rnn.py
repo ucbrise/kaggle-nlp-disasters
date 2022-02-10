@@ -190,7 +190,7 @@ def train(
                             flor.log("average_valid_loss", average_valid_loss),
                         )
                     )
-                    clr_scheduler.step()
+                clr_scheduler.step()
 
         flor.SkipBlock.end(model, optimizer, clr_scheduler)
     y_pred = []
