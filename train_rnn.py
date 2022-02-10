@@ -217,7 +217,7 @@ clr_scheduler = CLR_Scheduler(
     net_steps=(len(train_iter) * EPOCHS),
     min_lr=MIN_LR,
     max_lr=3.0,
-    tail_frac=0.0,
+    tail_frac=0.5,
 )
 pred = train(model=model, optimizer=optimizer, num_epochs=EPOCHS)
 
