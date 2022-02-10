@@ -11,6 +11,7 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 import seaborn as sns
 import flor
 from multiprocessing import set_start_method
+from utils import CLR_Scheduler
 
 try:
     set_start_method("spawn")
@@ -188,17 +189,13 @@ def train(
                             flor.log("average_valid_loss", average_valid_loss),
                         )
                     )
-                    flor.log("hindsight-logged-val", global_steps_list)
+                    clr_scheduler.step()
 
-        flor.SkipBlock.end(model, optimizer)
-
-    # model.load_state_dict(torch.load("best-model.pt"))
-    # predict test
+        flor.SkipBlock.end(model, optimizer, clr_scheduler)
     y_pred = []
     model.eval()
     with torch.no_grad():
         for ((words, words_len)), _ in test_loader:
-            # labels = labels.to(device)
             words = words.to(device)
             words_len = words_len.detach().cpu()
             output = model(words, words_len)
@@ -209,27 +206,21 @@ def train(
     return y_pred
 
 
+EPOCHS = 80
+MIN_LR = 1e-4
+
 model = LSTM(8).to(device)
-optimizer = optim.Adam(model.parameters(), lr=0.0015)
-pred = train(model=model, optimizer=optimizer, num_epochs=80)
-# print(pred)
-# print(len(pred))
+optimizer = optim.SGD(model.parameters(), lr=MIN_LR)
+clr_scheduler = CLR_Scheduler(
+    optimizer,
+    net_steps=(len(train_iter) * EPOCHS),
+    min_lr=MIN_LR,
+    max_lr=3.0,
+    tail_frac=0.0,
+)
+pred = train(model=model, optimizer=optimizer, num_epochs=EPOCHS)
 
 # save result as .csv file
-test_data = pd.read_csv("data/test.csv")
-preds_df = pd.DataFrame({"id": test_data["id"], "target": pred})
-preds_df.to_csv(f"data/output_lstm_3.csv", index=False)
-
-
-def log_helper(valid_loader):
-    model.eval()
-    with torch.no_grad():
-        # validation loop
-        for ((words, words_len), labels), _ in valid_loader:
-            labels = labels.to(device)
-            words = words.to(device)
-            words_len = words_len.detach().cpu()
-            output = model(words, words_len)
-
-            loss = criterion(output, labels)
-            valid_running_loss += float(loss.item())
+# test_data = pd.read_csv("data/test.csv")
+# preds_df = pd.DataFrame({"id": test_data["id"], "target": pred})
+# preds_df.to_csv(f"data/output_lstm_3.csv", index=False)
