@@ -211,12 +211,12 @@ EPOCHS = 80
 MIN_LR = 1e-4
 
 model = LSTM(8).to(device)
-optimizer = optim.Adam(model.parameters(), lr=MIN_LR)
+optimizer = optim.SGD(model.parameters(), lr=MIN_LR)
 clr_scheduler = CLR_Scheduler(
     optimizer,
     net_steps=(len(train_iter) * EPOCHS),
     min_lr=MIN_LR,
-    max_lr=2.0,
+    max_lr=4.0,
     tail_frac=0.0,
 )
 pred = train(model=model, optimizer=optimizer, num_epochs=EPOCHS)
