@@ -180,9 +180,10 @@ def train(
 
                     # print progress
                     print(
-                        "Epoch [{}/{}], Step [{}/{}], Train Loss: {:.4f}, Valid Loss: {:.4f}".format(
+                        "Epoch [{}/{}], LR: {:.3f}, Step [{}/{}], Train Loss: {:.4f}, Valid Loss: {:.4f}".format(
                             epoch + 1,
                             num_epochs,
+                            optimizer.param_groups[0]["lr"],
                             global_step,
                             num_epochs * len(train_loader),
                             flor.log("avg_train_loss", average_train_loss),
