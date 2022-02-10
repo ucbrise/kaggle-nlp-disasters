@@ -188,6 +188,7 @@ def train(
                             flor.log("average_valid_loss", average_valid_loss),
                         )
                     )
+                    flor.log("hindsight-logged-val", global_steps_list)
 
         flor.SkipBlock.end(model, optimizer)
 
