@@ -131,7 +131,7 @@ def train(
     best_loss = float("inf")
     model.train()
     for epoch in flor.it(range(num_epochs)):
-        flor.log("learning_rate", str(optimizer.param_groups[0]["lr"]))
+        flor.log("learning_rate", optimizer.param_groups[0]["lr"])
         if flor.SkipBlock.step_into("batchwise-loop"):
             for ((words, words_len), labels), _ in train_loader:
                 labels = labels.to(device)
@@ -216,7 +216,7 @@ MIN_LR = 1e-4
 
 model = LSTM(8).to(device)
 optimizer = optim.SGD(model.parameters(), lr=MIN_LR)
-flor.log("optimizer", str(type(optimizer)))
+flor.log("optimizer", type(optimizer))
 clr_scheduler = CLR_Scheduler(
     optimizer,
     net_steps=(len(train_iter) * EPOCHS),
