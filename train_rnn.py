@@ -131,6 +131,7 @@ def train(
     best_loss = float("inf")
     model.train()
     for epoch in flor.it(range(num_epochs)):
+        flor.log("learning_rate", str(optimizer.param_groups[0]["lr"]))
         if flor.SkipBlock.step_into("batchwise-loop"):
             for ((words, words_len), labels), _ in train_loader:
                 labels = labels.to(device)
@@ -186,13 +187,16 @@ def train(
                             optimizer.param_groups[0]["lr"],
                             global_step,
                             num_epochs * len(train_loader),
-                            flor.log("avg_train_loss", average_train_loss),
-                            flor.log("average_valid_loss", average_valid_loss),
+                            average_train_loss,
+                            average_valid_loss,
                         )
                     )
+                    flor.log("avg_train_loss", average_train_loss)
+                    flor.log("average_valid_loss", average_valid_loss)
                 clr_scheduler.step()
 
         flor.SkipBlock.end(model, optimizer, clr_scheduler)
+
     y_pred = []
     model.eval()
     with torch.no_grad():
@@ -212,6 +216,7 @@ MIN_LR = 1e-4
 
 model = LSTM(8).to(device)
 optimizer = optim.SGD(model.parameters(), lr=MIN_LR)
+flor.log("optimizer", str(type(optimizer)))
 clr_scheduler = CLR_Scheduler(
     optimizer,
     net_steps=(len(train_iter) * EPOCHS),
@@ -220,8 +225,3 @@ clr_scheduler = CLR_Scheduler(
     tail_frac=0.0,
 )
 pred = train(model=model, optimizer=optimizer, num_epochs=EPOCHS)
-
-# save result as .csv file
-# test_data = pd.read_csv("data/test.csv")
-# preds_df = pd.DataFrame({"id": test_data["id"], "target": pred})
-# preds_df.to_csv(f"data/output_lstm_3.csv", index=False)
