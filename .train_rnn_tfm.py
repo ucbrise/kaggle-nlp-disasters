@@ -1,3 +1,5 @@
+# type: ignore
+
 import flor
 import pandas as pd
 import numpy as np
@@ -131,96 +133,94 @@ def train(model, optimizer, criterion=nn.BCELoss(), train_loader=train_iter,
         if flor.skip_stack.peek().should_execute(not flor.SKIP):
             for epoch in flor.it(range(num_epochs)):
                 flor.log('learning_rate', str(optimizer.param_groups[0]['lr']))
-                if flor.SkipBlock.step_into('batchwise-loop'):
-                    flor.skip_stack.new(1)
-                    if flor.skip_stack.peek().should_execute(not flor.SKIP):
-                        for ((words, words_len), labels), _ in train_loader:
-                            labels = labels.to(device)
-                            flor.namespace_stack.test_force(labels, 'labels')
-                            words = words.to(device)
-                            flor.namespace_stack.test_force(words, 'words')
-                            words_len = words_len.detach().cpu()
-                            flor.namespace_stack.test_force(words_len,
-                                'words_len')
-                            output = model(words, words_len)
-                            flor.namespace_stack.test_force(output, 'output')
-                            loss = criterion(output, labels)
-                            flor.namespace_stack.test_force(loss, 'loss')
-                            optimizer.zero_grad()
-                            loss.backward()
-                            optimizer.step()
-                            running_loss += loss.item()
-                            global_step += 1
-                            if global_step % eval_every == 0:
-                                model.eval()
-                                with torch.no_grad():
-                                    flor.skip_stack.new(0)
-                                    if flor.skip_stack.peek().should_execute(
-                                        not flor.SKIP):
-                                        for ((words, words_len), labels
-                                            ), _ in valid_loader:
-                                            labels = labels.to(device)
-                                            flor.namespace_stack.test_force(labels,
-                                                'labels')
-                                            words = words.to(device)
-                                            flor.namespace_stack.test_force(words,
-                                                'words')
-                                            words_len = words_len.detach().cpu()
-                                            flor.namespace_stack.test_force(words_len,
-                                                'words_len')
-                                            output = model(words, words_len)
-                                            flor.namespace_stack.test_force(output,
-                                                'output')
-                                            loss = criterion(output, labels)
-                                            flor.namespace_stack.test_force(loss,
-                                                'loss')
-                                            valid_running_loss += float(loss.item())
-                                    (valid_running_loss, _, _, words_len,
-                                        output, loss) = (flor.skip_stack.
-                                        pop().proc_side_effects(
-                                        valid_running_loss, labels, words,
-                                        words_len, output, loss))
-                                average_train_loss = running_loss / eval_every
-                                flor.namespace_stack.test_force(
-                                    average_train_loss, 'average_train_loss')
-                                average_valid_loss = valid_running_loss / len(
-                                    valid_loader)
-                                flor.namespace_stack.test_force(
-                                    average_valid_loss, 'average_valid_loss')
-                                if average_valid_loss < best_loss:
-                                    best_loss = average_valid_loss
-                                    flor.namespace_stack.test_force(best_loss,
-                                        'best_loss')
-                                    torch.save(model.state_dict(),
-                                        'best-model.pt')
-                                train_loss_list.append(average_train_loss)
-                                valid_loss_list.append(average_valid_loss)
-                                global_steps_list.append(global_step)
-                                running_loss = 0.0
-                                flor.namespace_stack.test_force(running_loss,
-                                    'running_loss')
-                                valid_running_loss = 0.0
-                                flor.namespace_stack.test_force(
-                                    valid_running_loss, 'valid_running_loss')
-                                model.train()
-                                print(
-                                    'Epoch [{}/{}], LR: {:.3f}, Step [{}/{}], Train Loss: {:.4f}, Valid Loss: {:.4f}'
-                                    .format(epoch + 1, num_epochs,
-                                    optimizer.param_groups[0]['lr'],
-                                    global_step, num_epochs * len(
-                                    train_loader), average_train_loss,
-                                    average_valid_loss))
-                                flor.log('avg_train_loss', average_train_loss)
-                                flor.log('average_valid_loss',
-                                    average_valid_loss)
-                            clr_scheduler.step()
-                    (_, _, running_loss, valid_running_loss, global_step, _,
-                        _, _, best_loss, _, _, _) = (flor.skip_stack.pop().
-                        proc_side_effects(model, optimizer, running_loss,
-                        valid_running_loss, global_step, train_loss_list,
-                        valid_loss_list, global_steps_list, best_loss,
-                        torch, flor, clr_scheduler))
-                flor.SkipBlock.end(model, optimizer, clr_scheduler)
+                flor.skip_stack.new(1)
+                if flor.skip_stack.peek().should_execute(not flor.SKIP):
+                    for ((words, words_len), labels), _ in train_loader:
+                        labels = labels.to(device)
+                        flor.namespace_stack.test_force(labels, 'labels')
+                        words = words.to(device)
+                        flor.namespace_stack.test_force(words, 'words')
+                        words_len = words_len.detach().cpu()
+                        flor.namespace_stack.test_force(words_len,
+                            'words_len')
+                        output = model(words, words_len)
+                        flor.namespace_stack.test_force(output, 'output')
+                        loss = criterion(output, labels)
+                        flor.namespace_stack.test_force(loss, 'loss')
+                        optimizer.zero_grad()
+                        loss.backward()
+                        optimizer.step()
+                        running_loss += loss.item()
+                        global_step += 1
+                        if global_step % eval_every == 0:
+                            model.eval()
+                            with torch.no_grad():
+                                flor.skip_stack.new(0)
+                                if flor.skip_stack.peek().should_execute(
+                                    not flor.SKIP):
+                                    for ((words, words_len), labels
+                                        ), _ in valid_loader:
+                                        labels = labels.to(device)
+                                        flor.namespace_stack.test_force(labels,
+                                            'labels')
+                                        words = words.to(device)
+                                        flor.namespace_stack.test_force(words,
+                                            'words')
+                                        words_len = words_len.detach().cpu()
+                                        flor.namespace_stack.test_force(words_len,
+                                            'words_len')
+                                        output = model(words, words_len)
+                                        flor.namespace_stack.test_force(output,
+                                            'output')
+                                        loss = criterion(output, labels)
+                                        flor.namespace_stack.test_force(loss,
+                                            'loss')
+                                        valid_running_loss += float(loss.item())
+                                (valid_running_loss, _, _, words_len,
+                                    output, loss) = (flor.skip_stack.
+                                    pop().proc_side_effects(
+                                    valid_running_loss, labels, words,
+                                    words_len, output, loss))
+                            average_train_loss = running_loss / eval_every
+                            flor.namespace_stack.test_force(
+                                average_train_loss, 'average_train_loss')
+                            average_valid_loss = valid_running_loss / len(
+                                valid_loader)
+                            flor.namespace_stack.test_force(
+                                average_valid_loss, 'average_valid_loss')
+                            if average_valid_loss < best_loss:
+                                best_loss = average_valid_loss
+                                flor.namespace_stack.test_force(best_loss,
+                                    'best_loss')
+                                torch.save(model.state_dict(),
+                                    'best-model.pt')
+                            train_loss_list.append(average_train_loss)
+                            valid_loss_list.append(average_valid_loss)
+                            global_steps_list.append(global_step)
+                            running_loss = 0.0
+                            flor.namespace_stack.test_force(running_loss,
+                                'running_loss')
+                            valid_running_loss = 0.0
+                            flor.namespace_stack.test_force(
+                                valid_running_loss, 'valid_running_loss')
+                            model.train()
+                            print(
+                                'Epoch [{}/{}], LR: {:.3f}, Step [{}/{}], Train Loss: {:.4f}, Valid Loss: {:.4f}'
+                                .format(epoch + 1, num_epochs,
+                                optimizer.param_groups[0]['lr'],
+                                global_step, num_epochs * len(
+                                train_loader), average_train_loss,
+                                average_valid_loss))
+                            flor.log('avg_train_loss', average_train_loss)
+                            flor.log('average_valid_loss',
+                                average_valid_loss)
+                        clr_scheduler.step()
+                (_, _, running_loss, valid_running_loss, global_step, _,
+                    _, _, best_loss, _, _, _) = (flor.skip_stack.pop().
+                    proc_side_effects(model, optimizer, running_loss,
+                    valid_running_loss, global_step, train_loss_list,
+                    valid_loss_list, global_steps_list, best_loss,
+                    torch, flor, clr_scheduler))
         (_, _, running_loss, valid_running_loss, global_step, _, _, _,
             best_loss, _, _, _) = (flor.skip_stack.pop().proc_side_effects(
             model, optimizer, running_loss, valid_running_loss, global_step,
