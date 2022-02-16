@@ -18,8 +18,8 @@ try:
 except RuntimeError:
     pass
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")\
-flor.log('device', str(device))
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+flor.log("device", str(device))
 device
 
 label_field = Field(
