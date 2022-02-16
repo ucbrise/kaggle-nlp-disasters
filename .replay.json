@@ -652,6 +652,9 @@
             0.5068355202674866,
             0.5068813972175121
         ],
+        "0.b.device": [
+            "cpu"
+        ],
         "0.b.optimizer": [
             "<class 'torch.optim.sgd.SGD'>"
         ],
