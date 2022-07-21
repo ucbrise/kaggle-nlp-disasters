@@ -179,12 +179,19 @@ def train(
                     running_loss = 0.0
                     valid_running_loss = 0.0
                     model.train()
-                    print('Epoch [{}/{}], Step [{}/{}], Train Loss: {:.4f}, Valid Loss: {:.4f}'
-                      .format(epoch+1, num_epochs, global_step, num_epochs*len(train_loader),
-                              average_train_loss, average_valid_loss))
+                    print(
+                        "Epoch [{}/{}], Step [{}/{}], Train Loss: {:.4f}, Valid Loss: {:.4f}".format(
+                            epoch + 1,
+                            num_epochs,
+                            global_step,
+                            num_epochs * len(train_loader),
+                            average_train_loss,
+                            average_valid_loss,
+                        )
+                    )
 
                     # print progress
-                    '''
+                    """
                     print(
                         "Epoch [{}/{}], Step [{}/{}], Train Loss: {:.4f}, Valid Loss: {:.4f}".format(
                             epoch + 1,
@@ -195,7 +202,7 @@ def train(
                             flor.log("average_valid_loss", average_valid_loss),
                         )
                     )
-                    '''
+                    """
 
             flor.SkipBlock.end(model, optimizer)
 
