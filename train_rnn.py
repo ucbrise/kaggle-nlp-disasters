@@ -17,9 +17,6 @@ try:
 except RuntimeError:
     pass
 
-flor.flags.NAME = "kaggle-nlp-disasters-rnn"
-flor.flags.REPLAY = False
-
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 device
 
@@ -203,8 +200,8 @@ def train(
                         )
                     )
                     """
-
-            flor.SkipBlock.end(model, optimizer)
+        flor.SkipBlock.end(model, optimizer)
+        print(f"ending epoch {epoch + 1}")
 
     # model.load_state_dict(torch.load("best-model.pt"))
     # predict test

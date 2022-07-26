@@ -1,3 +1,15 @@
 {
-    "python.pythonPath": "/home/ubuntu/anaconda3/envs/pytorch_latest_p37/bin/python"
+    "python.pythonPath": "/home/ubuntu/anaconda3/envs/pytorch_latest_p37/bin/python",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./tests",
+        "-p",
+        "*_test.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "python.testing.pytestArgs": [
+        "tests"
+    ]
 }
