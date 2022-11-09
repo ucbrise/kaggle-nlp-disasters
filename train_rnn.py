@@ -20,7 +20,6 @@ except RuntimeError:
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 flor.log("device", str(device))
-device
 
 label_field = Field(
     sequential=False, use_vocab=False, batch_first=True, dtype=torch.float
