@@ -99,3 +99,4 @@ celerybeat-schedule
 celerybeat.pid
 
 # SageMath parsed files
+.mypy_cache/**
