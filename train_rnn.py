@@ -42,9 +42,11 @@ test = TabularDataset(
     path="data/test_rnn.csv", format="CSV", fields=fields_test, skip_header=True
 )
 
+BATCH_SIZE = 64
+
 train_iter = BucketIterator(
     train,
-    batch_size=200,
+    batch_size=BATCH_SIZE,
     sort_key=lambda x: len(x.words),
     device=device,
     sort=True,
@@ -52,7 +54,7 @@ train_iter = BucketIterator(
 )
 valid_iter = BucketIterator(
     valid,
-    batch_size=200,
+    batch_size=BATCH_SIZE,
     sort_key=lambda x: len(x.words),
     device=device,
     sort=True,
@@ -60,7 +62,7 @@ valid_iter = BucketIterator(
 )
 test_iter = BucketIterator(
     test,
-    batch_size=200,
+    batch_size=BATCH_SIZE,
     sort_key=lambda x: len(x.words),
     device=device,
     sort=True,
