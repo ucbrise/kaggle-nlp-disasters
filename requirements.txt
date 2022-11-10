@@ -3,3 +3,4 @@ torchtext==0.10
 torchvision==0.10
 pytorch==1.9.0
 scikit-learn==1.1.3
+spacy
