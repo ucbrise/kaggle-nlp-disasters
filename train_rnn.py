@@ -200,7 +200,7 @@ def train(
     y_pred = []
     model.eval()
     with torch.no_grad():
-        for ((words, words_len)), _ in test_loader: #type: ignore
+        for ((words, words_len)), _ in test_loader:  # type: ignore
             words = words.to(device)
             words_len = words_len.detach().cpu()
             output = model(words, words_len)
