@@ -119,7 +119,7 @@ def train(
     train_loader=train_iter,
     valid_loader=valid_iter,
     test_loader=test_iter,
-    num_epochs=5,
+    num_epochs=len(train_iter) // 10,
     eval_every=4,
     file_path="training_process",
     best_valid_loss=float("Inf"),
