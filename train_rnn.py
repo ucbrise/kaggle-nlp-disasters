@@ -35,7 +35,7 @@ train, valid = TabularDataset.splits(
     format="CSV",
     fields=fields,
     skip_header=True,
-)
+)  # type: ignore
 test = TabularDataset(
     path="data/test_rnn.csv", format="CSV", fields=fields_test, skip_header=True
 )
