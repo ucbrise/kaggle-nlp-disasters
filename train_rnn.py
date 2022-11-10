@@ -1,16 +1,18 @@
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-import torch
-from torchtext.legacy.data import Field, TabularDataset, BucketIterator
-import torch.nn as nn
-from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
-import torch.optim as optim
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-import seaborn as sns
-import flor
 from multiprocessing import set_start_method
+
+import flor
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from flor import MTK as Flor
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
+from torchtext.legacy.data import BucketIterator, Field, TabularDataset
+
 from utils import CLR_Scheduler
 
 try:
@@ -130,77 +132,75 @@ def train(
     # training loop
     best_loss = float("inf")
     model.train()
-    for epoch in flor.it(range(num_epochs)):
+    Flor.checkpoints(model, optimizer, clr_scheduler)
+    for epoch in Flor.loop(range(num_epochs)):
         flor.log("learning_rate", optimizer.param_groups[0]["lr"])
-        if flor.SkipBlock.step_into("batchwise-loop"):
-            for ((words, words_len), labels), _ in train_loader:
-                labels = labels.to(device)
-                words = words.to(device)
-                words_len = words_len.detach().cpu()
-                output = model(words, words_len)
+        for ((words, words_len), labels), _ in Flor.loop(train_loader):  # type: ignore
+            labels = labels.to(device)
+            words = words.to(device)
+            words_len = words_len.detach().cpu()
+            output = model(words, words_len)
 
-                loss = criterion(output, labels)
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
+            loss = criterion(output, labels)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
-                # update running values
-                running_loss += loss.item()
-                global_step += 1
+            # update running values
+            running_loss += loss.item()
+            global_step += 1
 
-                # evaluation step
-                if global_step % eval_every == 0:
-                    model.eval()
-                    with torch.no_grad():
-                        # validation loop
-                        for ((words, words_len), labels), _ in valid_loader:
-                            labels = labels.to(device)
-                            words = words.to(device)
-                            words_len = words_len.detach().cpu()
-                            output = model(words, words_len)
+            # evaluation step
+            if global_step % eval_every == 0:
+                model.eval()
+                with torch.no_grad():
+                    # validation loop
+                    for ((words, words_len), labels), _ in valid_loader:  # type: ignore
+                        labels = labels.to(device)
+                        words = words.to(device)
+                        words_len = words_len.detach().cpu()
+                        output = model(words, words_len)
 
-                            loss = criterion(output, labels)
-                            valid_running_loss += float(loss.item())
+                        loss = criterion(output, labels)
+                        valid_running_loss += float(loss.item())
 
-                    # evaluation
-                    average_train_loss = running_loss / eval_every
-                    average_valid_loss = valid_running_loss / len(valid_loader)
+                # evaluation
+                average_train_loss = running_loss / eval_every
+                average_valid_loss = valid_running_loss / len(valid_loader)
 
-                    if average_valid_loss < best_loss:
-                        best_loss = average_valid_loss
-                        torch.save(model.state_dict(), "best-model.pt")
+                if average_valid_loss < best_loss:
+                    best_loss = average_valid_loss
+                    torch.save(model.state_dict(), "best-model.pt")
 
-                    train_loss_list.append(average_train_loss)
-                    valid_loss_list.append(average_valid_loss)
-                    global_steps_list.append(global_step)
+                train_loss_list.append(average_train_loss)
+                valid_loss_list.append(average_valid_loss)
+                global_steps_list.append(global_step)
 
-                    # resetting running values
-                    running_loss = 0.0
-                    valid_running_loss = 0.0
-                    model.train()
+                # resetting running values
+                running_loss = 0.0
+                valid_running_loss = 0.0
+                model.train()
 
-                    # print progress
-                    print(
-                        "Epoch [{}/{}], LR: {:.3f}, Step [{}/{}], Train Loss: {:.4f}, Valid Loss: {:.4f}".format(
-                            epoch + 1,
-                            num_epochs,
-                            optimizer.param_groups[0]["lr"],
-                            global_step,
-                            num_epochs * len(train_loader),
-                            average_train_loss,
-                            average_valid_loss,
-                        )
+                # print progress
+                print(
+                    "Epoch [{}/{}], LR: {:.3f}, Step [{}/{}], Train Loss: {:.4f}, Valid Loss: {:.4f}".format(
+                        epoch + 1,
+                        num_epochs,
+                        optimizer.param_groups[0]["lr"],
+                        global_step,
+                        num_epochs * len(train_loader),
+                        average_train_loss,
+                        average_valid_loss,
                     )
-                    flor.log("avg_train_loss", average_train_loss)
-                    flor.log("average_valid_loss", average_valid_loss)
-                clr_scheduler.step()
-
-        flor.SkipBlock.end(model, optimizer, clr_scheduler)
+                )
+                flor.log("avg_train_loss", average_train_loss)
+                flor.log("average_valid_loss", average_valid_loss)
+            clr_scheduler.step()
 
     y_pred = []
     model.eval()
     with torch.no_grad():
-        for ((words, words_len)), _ in test_loader:
+        for ((words, words_len)), _ in test_loader: #type: ignore
             words = words.to(device)
             words_len = words_len.detach().cpu()
             output = model(words, words_len)
