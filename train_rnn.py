@@ -136,7 +136,7 @@ def train(
     model.train()
     Flor.checkpoints(model, optimizer, clr_scheduler)
     for epoch in Flor.loop(range(num_epochs)):
-        flor.log("learning_rate", optimizer.param_groups[0]["lr"])
+        print(f"starting loop {epoch}")
         for ((words, words_len), labels), _ in Flor.loop(train_loader):  # type: ignore
             labels = labels.to(device)
             words = words.to(device)
