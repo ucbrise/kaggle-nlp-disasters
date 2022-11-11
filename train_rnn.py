@@ -213,7 +213,7 @@ def train(
     return y_pred
 
 
-EPOCHS = 80
+EPOCHS = 20
 MIN_LR = 1e-4
 
 model = LSTM(8).to(device)
