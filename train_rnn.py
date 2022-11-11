@@ -42,9 +42,11 @@ test = TabularDataset(
     path="data/test_rnn.csv", format="CSV", fields=fields_test, skip_header=True
 )
 
+BATCH_SIZE = 64
+
 train_iter = BucketIterator(
     train,
-    batch_size=200,
+    batch_size=BATCH_SIZE,
     sort_key=lambda x: len(x.words),
     device=device,
     sort=True,
@@ -52,7 +54,7 @@ train_iter = BucketIterator(
 )
 valid_iter = BucketIterator(
     valid,
-    batch_size=200,
+    batch_size=BATCH_SIZE,
     sort_key=lambda x: len(x.words),
     device=device,
     sort=True,
@@ -60,7 +62,7 @@ valid_iter = BucketIterator(
 )
 test_iter = BucketIterator(
     test,
-    batch_size=200,
+    batch_size=BATCH_SIZE,
     sort_key=lambda x: len(x.words),
     device=device,
     sort=True,
@@ -117,8 +119,8 @@ def train(
     train_loader=train_iter,
     valid_loader=valid_iter,
     test_loader=test_iter,
-    num_epochs=5,
-    eval_every=len(train_iter) // 2,
+    num_epochs=len(train_iter) // 10,
+    eval_every=4,
     file_path="training_process",
     best_valid_loss=float("Inf"),
 ):
@@ -211,7 +213,7 @@ def train(
     return y_pred
 
 
-EPOCHS = 80
+EPOCHS = 20
 MIN_LR = 1e-4
 
 model = LSTM(8).to(device)
