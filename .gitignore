@@ -100,3 +100,5 @@ celerybeat.pid
 
 # SageMath parsed files
 .mypy_cache/**
+
+dump/**
