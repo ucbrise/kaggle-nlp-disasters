@@ -1,5 +1,2 @@
--- SELECT distinct name
--- FROM logging;
 SELECT *
-FROM logging
-WHERE name = 'clf_seed';
+FROM kaggle_simple;
