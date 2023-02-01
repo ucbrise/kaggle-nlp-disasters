@@ -1,2 +1,2 @@
-SELECT *
-FROM kaggle_simple;
+SELECT DISTINCT name
+from logging;
