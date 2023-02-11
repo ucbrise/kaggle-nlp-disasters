@@ -16,6 +16,7 @@ from torchtext.legacy.data import BucketIterator, Field, TabularDataset
 from utils import CLR_Scheduler
 
 import time
+
 start_time = time.time()
 
 try:
@@ -230,4 +231,4 @@ clr_scheduler = CLR_Scheduler(
     tail_frac=0.0,
 )
 pred = train(model=model, optimizer=optimizer, num_epochs=EPOCHS)
-print(f"\nseconds elapsed: {time.time() - start_time}")
+print(f"\nseconds elapsed: {flor.log('time', time.time() - start_time)}")
