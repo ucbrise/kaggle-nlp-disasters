@@ -140,6 +140,7 @@ def train(
     model.train()
     Flor.checkpoints(model, optimizer, clr_scheduler)
     for epoch in Flor.loop(range(num_epochs)):
+        epoch_start_time = time.time()
         flor.log("learning_rate", optimizer.param_groups[0]["lr"])
         for ((words, words_len), labels), _ in Flor.loop(train_loader):  # type: ignore
             labels = labels.to(device)
@@ -201,7 +202,10 @@ def train(
                 )
                 flor.log("avg_train_loss", average_train_loss)
                 flor.log("average_valid_loss", average_valid_loss)
-            clr_scheduler.step()
+        clr_scheduler.step()
+        print(
+            f"time elapsed in epoch: {flor.log('epoch_sec', epoch_start_time - time.time())}"
+        )
 
     y_pred = []
     model.eval()
@@ -231,4 +235,3 @@ clr_scheduler = CLR_Scheduler(
     tail_frac=0.0,
 )
 pred = train(model=model, optimizer=optimizer, num_epochs=EPOCHS)
-print(f"\nseconds elapsed: {flor.log('time', time.time() - start_time)}")
