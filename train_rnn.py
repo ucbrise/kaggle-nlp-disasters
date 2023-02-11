@@ -204,7 +204,7 @@ def train(
                 flor.log("average_valid_loss", average_valid_loss)
         clr_scheduler.step()
         print(
-            f"time elapsed in epoch: {flor.log('epoch_sec', epoch_start_time - time.time())}"
+            f"time elapsed in epoch: {flor.log('epoch_sec', time.time() - epoch_start_time)}"
         )
 
     y_pred = []
