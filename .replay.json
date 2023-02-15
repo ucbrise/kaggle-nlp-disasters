@@ -2,5 +2,6 @@
     "NAME": "kaggle-feb",
     "device": "cuda:0",
     "optimizer": "<class 'torch.optim.sgd.SGD'>",
-    "MEMO": "/home/rogarcia/.flor/kaggle-feb/2023-02-14T18:43:31.json"
+    "MEMO": "/home/rogarcia/.flor/kaggle-feb/2023-02-14T18:50:31.json",
+    "COMMIT": "ff024ea7f24dd8142a53c19f731e72f7bfe069e7"
 }
