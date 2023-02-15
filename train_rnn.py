@@ -1,6 +1,8 @@
 from multiprocessing import set_start_method
 
 import flor
+from flor import MTK as Flor
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -8,7 +10,7 @@ import seaborn as sns
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from flor import MTK as Flor
+
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from torchtext.legacy.data import BucketIterator, Field, TabularDataset
