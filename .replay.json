@@ -1,5 +1,6 @@
 {
+    "NAME": "kaggle-feb",
     "device": "cuda:0",
     "optimizer": "<class 'torch.optim.sgd.SGD'>",
-    "MEMO": "/home/rogarcia/.flor/kaggle-feb/2023-02-14T18:41:27.json"
+    "MEMO": "/home/rogarcia/.flor/kaggle-feb/2023-02-14T18:43:31.json"
 }
