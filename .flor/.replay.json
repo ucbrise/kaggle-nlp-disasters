@@ -1,6 +1,6 @@
 {
-    "NAME": "magic",
-    "tstamp": "2023-02-16T13:47:01.083012",
+    "NAME": "saveMagic",
+    "tstamp": "2023-02-16T13:53:07.101544",
     "device": "cuda:0",
     "optimizer": "<class 'torch.optim.sgd.SGD'>",
     "PROJID": "kaggle-nlp-disasters:flor.shadow"
