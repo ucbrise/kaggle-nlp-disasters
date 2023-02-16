@@ -1,2 +1,2 @@
 # coding: utf-8
-%save -rf .flor/run.ipy
+!python train_rnn.py --flor saveMagic
