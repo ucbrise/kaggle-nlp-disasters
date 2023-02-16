@@ -1,5 +1,8 @@
 {
-    "tstamp": "2023-02-15T06:09:56.338851",
-    "COMMIT": "d0581520dcec141b00e308c2b2999c5d5c689209",
+    "NAME": "dummy",
+    "tstamp": "2023-02-15T06:25:22.052964",
+    "device": "cuda:0",
+    "optimizer": "<class 'torch.optim.sgd.SGD'>",
+    "COMMIT": "66eea8a60dfb342c4210e50b379c5cbda8579f4f",
     "PROJID": "kaggle-nlp-disasters:flor.shadow"
 }
