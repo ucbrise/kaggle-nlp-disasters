@@ -1,2 +1,2 @@
 # coding: utf-8
-!ls
+%save -rf .flor/run.ipy
