@@ -1,0 +1,15 @@
+# coding: utf-8
+!ls
+ls
+!ls
+ls
+code train_rnn.py
+python train_rnn.py --flor jupyter
+!python train_rnn.py --flor jupyter
+!mkdir .flor
+!mv .replay.json .flor/
+!mv log_records.csv .flor/
+!python train_rnn.py --flor newFlor
+!python train_rnn.py --flor noCommitHex
+!python train_rnn.py --flor
+%save -rf .flor/run.txt
