@@ -1,6 +1,6 @@
 {
     "NAME": "runID",
-    "tstamp": "2023-02-16T16:21:25.335194",
+    "TSTAMP": "2023-02-16T16:46:28.588473",
     "device": "cuda:0",
     "optimizer": "<class 'torch.optim.sgd.SGD'>",
     "PROJID": "kaggle-nlp-disasters:flor.shadow",
