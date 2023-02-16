@@ -1,8 +1,8 @@
 {
-    "NAME": "jupyter",
-    "tstamp": "2023-02-16T11:32:39.399126",
+    "NAME": "newFlor",
+    "tstamp": "2023-02-16T12:07:37.890983",
     "device": "cuda:0",
     "optimizer": "<class 'torch.optim.sgd.SGD'>",
-    "COMMIT": "ee0c4c5c3499ff0a325cfb3edee14bee052a4c0b",
+    "COMMIT": "a25334f5b73bf85eab216ff2a133dae9a4926c08",
     "PROJID": "kaggle-nlp-disasters:flor.shadow"
 }
