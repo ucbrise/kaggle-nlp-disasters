@@ -1,10 +1,2 @@
 # coding: utf-8
-!python train_rnn.py --flor runID
-%save -rf .flor/run.ipy
-!python train_rnn.py --replay_flor 20/20
-%save -rf .flor/run.ipy
-!python train_rnn.py --flor
-%save -rf .flor/run.ipy
-!python train_rnn.py --flor
-%save -rf .flor/run.ipy
 !python train_rnn.py --flor
