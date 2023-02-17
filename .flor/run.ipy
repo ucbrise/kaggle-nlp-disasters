@@ -8,3 +8,5 @@
 !python train_rnn.py --replay_flor 2/2
 %save -rf .flor/run.ipy
 !python train_rnn.py --replay_flor 2/2
+%save -rf .flor/run.ipy
+!python train_rnn.py --replay_flor 17/20
