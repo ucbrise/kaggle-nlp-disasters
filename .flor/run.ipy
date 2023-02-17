@@ -1,2 +1,5 @@
 # coding: utf-8
 !python train_rnn.py --flor
+%save -rf .flor/run.ipy
+!git log
+!python train_rnn.py --replay_flor 20/20
