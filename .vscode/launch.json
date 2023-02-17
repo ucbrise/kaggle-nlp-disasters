@@ -11,7 +11,8 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "--replay_flor 2/2"
+                "--replay_flor",
+                "2/2"
             ]
         },
         {
