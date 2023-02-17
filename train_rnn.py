@@ -27,7 +27,6 @@ except RuntimeError:
     pass
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-flor.log("device", str(device))
 
 label_field = Field(
     sequential=False, use_vocab=False, batch_first=True, dtype=torch.float
@@ -143,7 +142,6 @@ def train(
     Flor.checkpoints(model, optimizer, clr_scheduler)
     for epoch in Flor.loop(range(num_epochs)):
         epoch_start_time = time.time()
-        flor.log("learning_rate", optimizer.param_groups[0]["lr"])
         for ((words, words_len), labels), _ in Flor.loop(train_loader):  # type: ignore
             labels = labels.to(device)
             words = words.to(device)
@@ -228,7 +226,6 @@ MIN_LR = 1e-4
 
 model = LSTM(8).to(device)
 optimizer = optim.SGD(model.parameters(), lr=MIN_LR)
-flor.log("optimizer", str(type(optimizer)))
 clr_scheduler = CLR_Scheduler(
     optimizer,
     net_steps=(len(train_iter) * EPOCHS),
