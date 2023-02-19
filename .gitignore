@@ -102,3 +102,4 @@ celerybeat.pid
 .mypy_cache/**
 
 dump/**
+.DS_Store
