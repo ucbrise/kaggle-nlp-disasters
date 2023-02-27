@@ -103,3 +103,4 @@ celerybeat.pid
 
 dump/**
 .DS_Store
+peak_pivot.csv
