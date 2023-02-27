@@ -199,7 +199,6 @@ def train(
                         average_valid_loss,
                     )
                 )
-                flor.log("avg_train_loss", average_train_loss)
                 flor.log("average_valid_loss", average_valid_loss)
         clr_scheduler.step()
 
