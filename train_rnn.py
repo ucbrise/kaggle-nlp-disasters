@@ -119,7 +119,7 @@ def train(
     global_steps_list = []
     best_loss = float("inf")
     model.train()
-    Flor.checkpoints(model, optimizer, clr_scheduler)
+    Flor.checkpoints(model, optimizer)
     for epoch in Flor.loop(range(num_epochs)):
         for (((words, words_len), labels), _) in Flor.loop(train_loader):
             labels = labels.to(device)
@@ -166,7 +166,6 @@ def train(
                 )
                 flor.log("avg_train_loss", average_train_loss)
                 flor.log("average_valid_loss", average_valid_loss)
-        clr_scheduler.step()
     y_pred = []
     model.eval()
     with torch.no_grad():
@@ -181,15 +180,8 @@ def train(
 
 
 EPOCHS = 20
-MIN_LR = 0.0001
+MIN_LR = 1e-4
 model = LSTM(8).to(device)
 optimizer = optim.SGD(model.parameters(), lr=MIN_LR)
 flor.log("optimizer", str(type(optimizer)))
-clr_scheduler = CLR_Scheduler(
-    optimizer,
-    net_steps=len(train_iter) * EPOCHS,
-    min_lr=MIN_LR,
-    max_lr=4.0,
-    tail_frac=0.0,
-)
 pred = train(model=model, optimizer=optimizer, num_epochs=EPOCHS)
