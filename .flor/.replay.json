@@ -1,6 +1,8 @@
 {
-    "NAME": "joeDemo",
-    "TSTAMP": "2023-02-24T14:07:22.json",
+    "NAME": "constantlr",
+    "TSTAMP": "2023-02-28T15:39:12.json",
+    "device": "cuda:0",
+    "optimizer": "<class 'torch.optim.sgd.SGD'>",
     "PROJID": "kaggle-nlp-disasters_flor.shadow",
     "EPOCHS": 20
 }
