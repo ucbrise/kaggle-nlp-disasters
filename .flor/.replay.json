@@ -1,8 +1,6 @@
 {
-    "NAME": "constantlr",
-    "TSTAMP": "2023-02-28T15:43:25.json",
-    "device": "cuda:0",
-    "optimizer": "<class 'torch.optim.sgd.SGD'>",
+    "NAME": "leastLogging",
+    "TSTAMP": "2023-03-03T12:52:27.json",
     "PROJID": "kaggle-nlp-disasters_flor.shadow",
     "EPOCHS": 20
 }
