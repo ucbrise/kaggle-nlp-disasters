@@ -184,5 +184,5 @@ EPOCHS = 20
 MIN_LR = 0.0001
 model = LSTM(8).to(device)
 optimizer = optim.SGD(model.parameters(), lr=MIN_LR)
-lr_scheduler = CLR_Scheduler(optimizer, len(train_iter) * EPOCHS, MIN_LR, max_lr=4.0)
+lr_scheduler = CLR_Scheduler(optimizer, len(train_iter) * EPOCHS, MIN_LR, max_lr=6.0)
 pred = train(model=model, optimizer=optimizer, num_epochs=EPOCHS)
